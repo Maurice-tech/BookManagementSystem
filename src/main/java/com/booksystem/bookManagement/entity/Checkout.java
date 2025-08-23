@@ -1,8 +1,10 @@
 package com.booksystem.bookManagement.entity;
 
+import com.booksystem.bookManagement.entity.enums.CheckoutStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 
 @Entity
@@ -24,11 +26,16 @@ public class Checkout {
     @JoinColumn(name = "book_id")
     private Book book;
 
+    @ManyToOne
+    @JoinColumn(name = "reader_id", nullable = false)
+    private BookUsers reader;
+
     private LocalDateTime checkoutDate;
     private LocalDateTime dueDate;
     private LocalDateTime checkinDate;
 
     @Enumerated(EnumType.STRING)
     private CheckoutStatus status;
+
 }
 

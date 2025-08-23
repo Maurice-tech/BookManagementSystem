@@ -13,5 +13,7 @@ public interface CheckoutRepository extends JpaRepository<Checkout, Long> {
     List<Checkout> findByUserIdAndStatus(Long userId, CheckoutStatus status);
     List<Checkout> findByStatusAndDueDateBetween(CheckoutStatus status, LocalDateTime from, LocalDateTime to);
     List<Checkout> findByStatusAndDueDateBefore(CheckoutStatus status, LocalDateTime before);
+
+    List<Checkout> findByReturnDateIsNull();
 }
 

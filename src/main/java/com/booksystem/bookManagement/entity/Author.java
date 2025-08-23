@@ -15,9 +15,13 @@ import java.util.Set;
 public class Author extends BaseEntity {
 
     @Column(nullable = false)
-    private String name;
+    private  String name;
 
     // helper convenience
     @ManyToMany(mappedBy = "authors")
     private Set<Book> books = new HashSet<>();
+
+    public Author(String name) {
+        this.name = name;
+    }
 }
