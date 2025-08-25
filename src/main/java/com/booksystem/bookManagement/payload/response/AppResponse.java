@@ -20,5 +20,9 @@ public class AppResponse<T> {
     public static <T> AppResponse<T> failure(String message, int status) {
         return new AppResponse<>(false, message, null, status);
     }
+
+    public static <T> AppResponse<T> error(String message, int status) {
+        return new AppResponse<>(false, message, null, status);
+    }
 }
 

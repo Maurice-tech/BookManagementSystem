@@ -43,6 +43,7 @@ public class Book extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "author_id"))
     private Set<Author> authors = new HashSet<>();
 
-    public void setCreatedBy(BookUsers user) {
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by")
+    private BookUsers createdBy;
 }

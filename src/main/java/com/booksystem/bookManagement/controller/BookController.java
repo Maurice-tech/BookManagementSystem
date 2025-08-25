@@ -1,12 +1,17 @@
 package com.booksystem.bookManagement.controller;
 import com.booksystem.bookManagement.entity.Book;
 import com.booksystem.bookManagement.entity.Checkout;
+import com.booksystem.bookManagement.payload.request.BookRequest;
+import com.booksystem.bookManagement.payload.request.BookRequestDto;
 import com.booksystem.bookManagement.payload.response.AppResponse;
 import com.booksystem.bookManagement.payload.response.BookResponse;
 import com.booksystem.bookManagement.service.BookService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,31 +23,36 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/books")
+@RequiredArgsConstructor
 public class BookController {
 
     private final BookService bookService;
 
-    @Autowired
-    public BookController(BookService bookService) {
-        this.bookService = bookService;
-    }
 
     @PostMapping
     public ResponseEntity<AppResponse<BookResponse>> createBook(
-            @RequestPart("book") Book book,
-            @RequestPart(value = "authors", required = false) List<String> authorNames) {
+            @RequestBody BookRequestDto request
+           ) {
 
-        AppResponse<BookResponse> response = bookService.createBook(book, authorNames);
+        AppResponse<BookResponse> response = bookService.createBook(
+                request.getBook(),
+                request.getAuthors()
+        );
+
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
     @PutMapping("/{bookId}")
     public ResponseEntity<AppResponse<BookResponse>> updateBook(
             @PathVariable Long bookId,
-            @RequestPart("book") Book updated,
-            @RequestPart(value = "authors", required = false) List<String> authorNames) {
+            @RequestBody BookRequest request,
+            @RequestBody List<String> authorNames) {
 
-        AppResponse<BookResponse> response = bookService.updateBook(bookId, updated, authorNames);
+        if (authorNames != null && !authorNames.isEmpty()) {
+            request.setAuthorNames(authorNames);
+        }
+
+        AppResponse<BookResponse> response = bookService.updateBook(bookId, request);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
@@ -62,13 +72,21 @@ public class BookController {
             @RequestParam(required = false) String publisher,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to,
-            Pageable pageable) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "title") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir
+    ) {
+
+        Sort.Direction direction = sortDir.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
 
         AppResponse<Page<BookResponse>> response =
                 bookService.search(title, isbn, publisher, from, to, pageable);
 
         return ResponseEntity.status(response.getStatus()).body(response);
     }
+
 
     @GetMapping("/checked-out")
     public ResponseEntity<AppResponse<List<Checkout>>> listCheckedOutBooks() {

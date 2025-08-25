@@ -15,5 +15,8 @@ public class BookRequest {
     private String genre;
     private String description;
     private Integer totalCopies;
-    private List<String> authorNames;  // list of authors
+    private List<String> authorNames;
+    private int availableCopies;
+
+
 }

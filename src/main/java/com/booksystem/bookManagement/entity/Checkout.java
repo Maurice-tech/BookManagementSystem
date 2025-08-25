@@ -32,7 +32,7 @@ public class Checkout {
 
     private LocalDateTime checkoutDate;
     private LocalDateTime dueDate;
-    private LocalDateTime checkinDate;
+    private LocalDateTime returnDate;
 
     @Enumerated(EnumType.STRING)
     private CheckoutStatus status;

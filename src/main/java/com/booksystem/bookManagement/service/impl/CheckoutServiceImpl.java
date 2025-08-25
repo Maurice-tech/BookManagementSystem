@@ -52,7 +52,7 @@ public class CheckoutServiceImpl implements CheckoutService {
                 .book(saved.getBook())
                 .checkoutDate(saved.getCheckoutDate())
                 .dueDate(saved.getDueDate())
-                .checkinDate(saved.getCheckinDate())
+                .checkinDate(saved.getReturnDate())
                 .status(saved.getStatus())
                 .build();
 
@@ -69,7 +69,7 @@ public class CheckoutServiceImpl implements CheckoutService {
             throw new IllegalStateException("Book not checked out");
         }
 
-        c.setCheckinDate(LocalDateTime.now());
+        c.setReturnDate(LocalDateTime.now());
         c.setStatus(CheckoutStatus.RETURNED);
 
         // increment available copies
@@ -85,7 +85,7 @@ public class CheckoutServiceImpl implements CheckoutService {
                 .book(saved.getBook())
                 .checkoutDate(saved.getCheckoutDate())
                 .dueDate(saved.getDueDate())
-                .checkinDate(saved.getCheckinDate())
+                .checkinDate(saved.getReturnDate())
                 .status(saved.getStatus())
                 .build();
 
