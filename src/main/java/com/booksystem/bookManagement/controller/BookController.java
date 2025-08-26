@@ -1,5 +1,4 @@
 package com.booksystem.bookManagement.controller;
-import com.booksystem.bookManagement.entity.Book;
 import com.booksystem.bookManagement.entity.Checkout;
 import com.booksystem.bookManagement.payload.request.BookRequest;
 import com.booksystem.bookManagement.payload.request.BookRequestDto;
@@ -7,7 +6,6 @@ import com.booksystem.bookManagement.payload.response.AppResponse;
 import com.booksystem.bookManagement.payload.response.BookResponse;
 import com.booksystem.bookManagement.service.BookService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
