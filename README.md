@@ -64,3 +64,9 @@ It is built using **Spring Boot + PostgreSQL** and demonstrates core features of
 git clone https://github.com/your-username/book-management.git
 cd book-management
 # Book Management
+```
+
+### 1. Swagger documentation
+```bash
+http://localhost:8070/swagger-ui/index.html#/auth-controller
+```
