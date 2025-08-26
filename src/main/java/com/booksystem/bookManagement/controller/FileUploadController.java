@@ -1,7 +1,9 @@
 package com.booksystem.bookManagement.controller;
 
+import com.booksystem.bookManagement.entity.BookUsers;
 import com.booksystem.bookManagement.payload.response.AppResponse;
 import com.booksystem.bookManagement.service.FileStorageService;
+import com.booksystem.bookManagement.utils.HelperClass;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ import java.util.Base64;
 public class FileUploadController {
 
     private final FileStorageService fileStorageService;
+    private final HelperClass helperClass;
 
     @PostMapping(value ="/upload-profile-picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Upload a profile picture")
@@ -30,17 +33,16 @@ public class FileUploadController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Profile picture uploaded successfully"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Error processing image")
     })
-    public ResponseEntity<AppResponse<String>> uploadProfilePicture(
-            @RequestParam("username") String username,
-            @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<AppResponse<String>> uploadProfilePicture(@RequestParam("file") MultipartFile file) {
         try {
-            byte[] imageBytes = file.getBytes();
-            String base64Image = Base64.getEncoder().encodeToString(imageBytes);
-            AppResponse<String> response = fileStorageService.uploadProfilePicture(username, base64Image);
+            BookUsers user = helperClass.getUserEntity();
+
+            AppResponse<String> response = fileStorageService.uploadProfilePicture(user.getEmail(), file);
             return ResponseEntity.ok(response);
+
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new AppResponse<>(false, "Error processing image", null, HttpStatus.CREATED.value()));
+                    .body(new AppResponse<>(false, "Error processing image", null, HttpStatus.INTERNAL_SERVER_ERROR.value()));
         }
     }
 }
